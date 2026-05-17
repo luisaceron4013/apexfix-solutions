@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ApexFix Solutions | Home Services in Texas</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Open+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #D4A017;
+            --primary-dark: #B8860B;
+            --primary-light: #F5D060;
+            --black: #0A0A0A;
+            --dark: #1A1A1A;
+            --dark-gray: #2D2D2D;
+            --gray: #4A4A4A;
+            --light-gray: #E8E8E8;
+            --white: #FFFFFF;
+            --accent-red: #C41E3A;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Open Sans', sans-serif; color: var(--dark); overflow-x: hidden; background: var(--white); }
+        h1, h2, h3, h4, h5, h6 { font-family: 'Montserrat', sans-serif; }
+
+        .navbar { position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; padding: 12px 0; transition: all 0.4s ease; background: rgba(10, 10, 10, 0.95); backdrop-filter: blur(10px); }
+        .navbar.scrolled { background: rgba(10, 10, 10, 0.98); padding: 8px 0; box-shadow: 0 4px 30px rgba(0,0,0,0.3); }
+        .nav-container { max-width: 1300px; margin: 0 auto; padding: 0 20px; display: flex; align-items: center; justify-content: space-between; }
+        .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; flex-shrink: 0; }
+        .nav-logo svg { height: 52px; width: auto; }
+        .nav-links { display: flex; align-items: center; gap: 28px; list-style: none; }
+        .nav-links a { color: var(--white); text-decoration: none; font-family: 'Montserrat', sans-serif; font-weight: 600; font-size: 13px; text-transform: uppercase; letter-spacing: 1px; transition: color 0.3s; position: relative; white-space: nowrap; }
+        .nav-links a::after { content: ''; position: absolute; bottom: -5px; left: 0; width: 0; height: 2px; background: var(--primary); transition: width 0.3s; }
+        .nav-links a:hover::after { width: 100%; }
+        .nav-links a:hover { color: var(--primary); }
+        .nav-phone { display: flex; align-items: center; gap: 6px; color: var(--primary); font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 13px; text-decoration: none; white-space: nowrap; }
+        .nav-phone svg { width: 16px; height: 16px; fill: var(--primary); }
+        .nav-cta { background: var(--primary); color: var(--black) !important; padding: 10px 22px; border-radius: 4px; font-weight: 700 !important; transition: all 0.3s !important; }
+        .nav-cta:hover { background: var(--primary-light) !important; transform: translateY(-2px); }
+        .nav-cta::after { display: none !important; }
+        .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; z-index: 1001; padding: 5px; }
+        .hamburger span { width: 26px; height: 3px; background: var(--white); border-radius: 2px; transition: all 0.3s; }
+        .hamburger.active span:nth-child(1) { transform: rotate(45deg) translate(5px, 6px); }
+        .hamburger.active span:nth-child(2) { opacity: 0; }
+        .hamburger.active span:nth-child(3) { transform: rotate(-45deg) translate(5px, -6px); }
+
+        .hero { min-height: 100vh; min-height: 100dvh; position: relative; display: flex; align-items: center; overflow: hidden; background: var(--black); }
+        .hero-bg { position: absolute; inset: 0; z-index: 1; }
+        .hero-bg img { width: 100%; height: 100%; object-fit: cover; opacity: 0.55; }
+        .hero-overlay { position: absolute; inset: 0; z-index: 2; background: linear-gradient(135deg, rgba(10,10,10,0.92) 0%, rgba(10,10,10,0.6) 50%, rgba(10,10,10,0.3) 100%); }
+        .hero-content { position: relative; z-index: 3; max-width: 1300px; margin: 0 auto; padding: 0 20px; width: 100%; padding-top: 100px; padding-bottom: 60px; }
+        .hero-badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(212, 160, 23, 0.15); border: 1px solid rgba(212, 160, 23, 0.4); padding: 8px 20px; border-radius: 50px; color: var(--primary); font-family: 'Montserrat', sans-serif; font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 25px; animation: fadeInUp 0.8s ease; }
+        .hero-badge svg { width: 16px; height: 16px; fill: var(--primary); }
+        .hero h1 { font-size: clamp(38px, 7vw, 80px); font-weight: 900; color: var(--white); line-height: 1.05; margin-bottom: 10px; text-transform: uppercase; animation: fadeInUp 0.8s ease 0.2s both; }
+        .hero h1 span { color: var(--primary); display: block; }
+        .hero-subtitle { font-size: clamp(16px, 2.5vw, 22px); color: rgba(255,255,255,0.85); font-weight: 400; margin-bottom: 15px; max-width: 580px; animation: fadeInUp 0.8s ease 0.4s both; line-height: 1.5; }
+        .hero-tagline { font-size: 15px; color: var(--primary); font-weight: 700; text-transform: uppercase; letter-spacing: 3px; margin-bottom: 35px; animation: fadeInUp 0.8s ease 0.5s both; }
+        .hero-buttons { display: flex; gap: 16px; flex-wrap: wrap; animation: fadeInUp 0.8s ease 0.6s both; }
+        .btn-primary { display: inline-flex; align-items: center; gap: 10px; background: var(--primary); color: var(--black); padding: 16px 32px; font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; text-decoration: none; border: none; border-radius: 4px; cursor: pointer; transition: all 0.3s; white-space: nowrap; }
+        .btn-primary:hover { background: var(--primary-light); transform: translateY(-3px); box-shadow: 0 10px 30px rgba(212, 160, 23, 0.4); }
+        .btn-secondary { display: inline-flex; align-items: center; gap: 10px; background: transparent; color: var(--white); padding: 16px 32px; font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; text-decoration: none; border: 2px solid rgba(255,255,255,0.4); border-radius: 4px; cursor: pointer; transition: all 0.3s; white-space: nowrap; }
+        .btn-secondary:hover { border-color: var(--primary); color: var(--primary); transform: translateY(-3px); }
+        .hero-stats { display: flex; gap: 40px; margin-top: 50px; animation: fadeInUp 0.8s ease 0.8s both; flex-wrap: wrap; }
+        .hero-stat { text-align: left; }
+        .hero-stat-number { font-family: 'Montserrat', sans-serif; font-size: 38px; font-weight: 900; color: var(--primary); line-height: 1; }
+        .hero-stat-label { color: rgba(255,255,255,0.6); font-size: 12px; text-transform: uppercase; letter-spacing: 1px; margin-top: 5px; }
+        .hero-scroll { position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); z-index: 3; animation: bounce 2s infinite; }
+        .hero-scroll svg { width: 30px; height: 30px; fill: var(--primary); opacity: 0.7; }
+
+        .emergency-banner { background: linear-gradient(90deg, var(--accent-red), #8B0000); padding: 12px 0; text-align: center; position: relative; overflow: hidden; }
+        .emergency-banner::before { content: ''; position: absolute; inset: 0; background: repeating-linear-gradient(-45deg, transparent, transparent 10px, rgba(255,255,255,0.03) 10px, rgba(255,255,255,0.03) 20px); }
+        .emergency-content { display: flex; align-items: center; justify-content: center; gap: 15px; flex-wrap: wrap; position: relative; z-index: 1; padding: 0 20px; }
+        .emergency-content span { color: var(--white); font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 13px; text-transform: uppercase; letter-spacing: 1px; }
+        .emergency-content a { color: var(--primary-light); font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 18px; text-decoration: none; }
+
+        .section { padding: 80px 0; }
+        .container { max-width: 1300px; margin: 0 auto; padding: 0 20px; }
+        .section-header { text-align: center; margin-bottom: 60px; }
+        .section-label { display: inline-flex; align-items: center; gap: 8px; color: var(--primary); font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: 3px; margin-bottom: 15px; }
+        .section-label::before, .section-label::after { content: ''; width: 30px; height: 2px; background: var(--primary); }
+        .section-title { font-size: clamp(28px, 4vw, 48px); font-weight: 800; color: var(--dark); text-transform: uppercase; line-height: 1.15; }
+        .section-title span { color: var(--primary); }
+        .section-subtitle { font-size: 16px; color: var(--gray); max-width: 650px; margin: 15px auto 0; line-height: 1.7; }
+
+        .services { background: var(--white); }
+        .services-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+        .service-card { background: var(--white); border: 1px solid var(--light-gray); border-radius: 12px; padding: 30px 20px; text-align: center; transition: all 0.4s ease; position: relative; overflow: hidden; }
+        .service-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px; background: var(--primary); transform: scaleX(0); transition: transform 0.4s; }
+        .service-card:hover::before { transform: scaleX(1); }
+        .service-card:hover { transform: translateY(-8px); box-shadow: 0 20px 50px rgba(0,0,0,0.1); border-color: transparent; }
+        .service-icon { width: 64px; height: 64px; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); border-radius: 14px; display: flex; align-items: center; justify-content: center; margin: 0 auto 18px; transition: all 0.4s; }
+        .service-card:hover .service-icon { transform: scale(1.1) rotate(5deg); }
+        .service-icon svg { width: 30px; height: 30px; fill: var(--white); }
+        .service-card h3 { font-size: 14px; font-weight: 700; color: var(--dark); text-transform: uppercase; margin-bottom: 10px; line-height: 1.3; }
+        .service-card p { font-size: 13px; color: var(--gray); line-height: 1.6; }
+
+        .about { background: var(--dark); position: relative; overflow: hidden; }
+        .about::before { content: ''; position: absolute; top: -50%; right: -20%; width: 600px; height: 600px; background: radial-gradient(circle, rgba(212,160,23,0.08) 0%, transparent 70%); border-radius: 50%; }
+        .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
+        .about-image { position: relative; }
+        .about-image img { width: 100%; border-radius: 12px; box-shadow: 0 30px 60px rgba(0,0,0,0.3); aspect-ratio: 4/3; object-fit: cover; }
+        .about-image-badge { position: absolute; bottom: -15px; right: -15px; background: var(--primary); color: var(--black); padding: 20px; border-radius: 12px; text-align: center; box-shadow: 0 15px 40px rgba(212,160,23,0.3); }
+        .about-image-badge .badge-number { font-family: 'Montserrat', sans-serif; font-size: 32px; font-weight: 900; line-height: 1; }
+        .about-image-badge .badge-text { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-top: 5px; }
+        .about-content .section-label { justify-content: flex-start; }
+        .about-content .section-label::before { display: none; }
+        .about-content .section-title { text-align: left; color: var(--white); }
+        .about-text { color: rgba(255,255,255,0.7); font-size: 15px; line-height: 1.8; margin: 20px 0 30px; }
+        .about-features { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 35px; }
+        .about-feature { display: flex; align-items: center; gap: 10px; }
+        .about-feature svg { width: 22px; height: 22px; fill: var(--primary); flex-shrink: 0; }
+        .about-feature span { color: var(--white); font-weight: 600; font-size: 13px; }
+
+        .team-section { background: var(--dark); padding: 0 0 80px 0; }
+        .team-header { text-align: center; margin-bottom: 50px; }
+        .team-header h3 { color: var(--white); font-size: 24px; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; }
+        .team-header h3 span { color: var(--primary); }
+        .team-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 30px; max-width: 700px; margin: 0 auto; }
+        .team-card { background: linear-gradient(135deg, var(--dark-gray) 0%, #3a3a3a 100%); border-radius: 16px; overflow: hidden; text-align: center; transition: all 0.4s; border: 1px solid rgba(255,255,255,0.05); }
+        .team-card:hover { transform: translateY(-8px); border-color: rgba(212,160,23,0.3); box-shadow: 0 20px 50px rgba(0,0,0,0.3); }
+        .team-card-img { width: 100%; aspect-ratio: 1/1; overflow: hidden; }
+        .team-card-img img { width: 100%; height: 100%; object-fit: cover; object-position: top; transition: transform 0.6s; }
+        .team-card:hover .team-card-img img { transform: scale(1.05); }
+        .team-card-info { padding: 25px 20px; }
+        .team-card-info h4 { color: var(--white); font-size: 18px; font-weight: 800; text-transform: uppercase; margin-bottom: 5px; }
+        .team-card-info .team-role { color: var(--primary); font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
+        .team-card-info p { color: rgba(255,255,255,0.5); font-size: 13px; line-height: 1.6; }
+
+        .why-us { background: var(--white); }
+        .why-us-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 25px; }
+        .why-card { background: linear-gradient(135deg, var(--dark) 0%, var(--dark-gray) 100%); padding: 40px 28px; border-radius: 12px; position: relative; overflow: hidden; transition: all 0.4s; }
+        .why-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, rgba(212,160,23,0.1) 0%, transparent 100%); opacity: 0; transition: opacity 0.4s; }
+        .why-card:hover::before { opacity: 1; }
+        .why-card:hover { transform: translateY(-5px); }
+        .why-card-icon { width: 56px; height: 56px; background: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 22px; position: relative; z-index: 1; }
+        .why-card-icon svg { width: 26px; height: 26px; fill: var(--black); }
+        .why-card h3 { color: var(--white); font-size: 18px; font-weight: 700; margin-bottom: 12px; text-transform: uppercase; position: relative; z-index: 1; }
+        .why-card p { color: rgba(255,255,255,0.6); font-size: 14px; line-height: 1.7; position: relative; z-index: 1; }
+
+        .process { background: var(--light-gray); }
+        .process-steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 25px; position: relative; }
+        .process-steps::before { content: ''; position: absolute; top: 45px; left: 12.5%; width: 75%; height: 3px; background: var(--primary); z-index: 0; }
+        .process-step { text-align: center; position: relative; z-index: 1; }
+        .step-number { width: 72px; height: 72px; background: var(--primary); color: var(--black); font-family: 'Montserrat', sans-serif; font-size: 26px; font-weight: 900; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 18px; box-shadow: 0 10px 30px rgba(212,160,23,0.3); position: relative; }
+        .step-number::after { content: ''; position: absolute; inset: -6px; border: 3px solid var(--primary); border-radius: 50%; opacity: 0.3; }
+        .process-step h3 { font-size: 15px; font-weight: 700; color: var(--dark); text-transform: uppercase; margin-bottom: 8px; }
+        .process-step p { font-size: 13px; color: var(--gray); line-height: 1.6; }
+
+        .gallery { background: var(--dark); padding: 80px 0; }
+        .gallery .section-title { color: var(--white); }
+        .gallery .section-subtitle { color: rgba(255,255,255,0.6); }
+        .gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(2, 280px); gap: 15px; }
+        .gallery-item { border-radius: 10px; overflow: hidden; position: relative; cursor: pointer; }
+        .gallery-item:nth-child(1) { grid-row: span 2; }
+        .gallery-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s; }
+        .gallery-item:hover img { transform: scale(1.1); }
+        .gallery-item-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 60%); display: flex; align-items: flex-end; padding: 25px; opacity: 0; transition: opacity 0.4s; }
+        .gallery-item:hover .gallery-item-overlay { opacity: 1; }
+        .gallery-item-overlay span { color: var(--white); font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 16px; text-transform: uppercase; }
+
+        .testimonials { background: var(--white); }
+        .testimonials-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 25px; }
+        .testimonial-card { background: var(--light-gray); padding: 35px 25px; border-radius: 12px; position: relative; transition: all 0.3s; }
+        .testimonial-card:hover { transform: translateY(-5px); box-shadow: 0 15px 40px rgba(0,0,0,0.08); }
+        .testimonial-quote { font-size: 42px; color: var(--primary); font-family: Georgia, serif; line-height: 1; margin-bottom: 8px; }
+        .testimonial-text { font-size: 14px; color: var(--gray); line-height: 1.8; margin-bottom: 22px; font-style: italic; }
+        .testimonial-author { display: flex; align-items: center; gap: 12px; }
+        .testimonial-avatar { width: 46px; height: 46px; background: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--black); font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 16px; }
+        .testimonial-name { font-family: 'Montserrat', sans-serif; font-weight: 700; color: var(--dark); font-size: 14px; }
+        .testimonial-location { font-size: 12px; color: var(--gray); }
+        .testimonial-stars { display: flex; gap: 2px; margin-top: 4px; }
+        .testimonial-stars svg { width: 13px; height: 13px; fill: var(--primary); }
+
+        .service-areas { background: var(--dark); position: relative; }
+        .service-areas .section-title { color: var(--white); }
+        .service-areas .section-subtitle { color: rgba(255,255,255,0.6); }
+        .areas-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; }
+        .area-item { background: var(--dark-gray); padding: 22px 15px; border-radius: 8px; text-align: center; border: 1px solid rgba(255,255,255,0.05); transition: all 0.3s; }
+        .area-item:hover { border-color: var(--primary); transform: translateY(-3px); }
+        .area-item svg { width: 22px; height: 22px; fill: var(--primary); margin-bottom: 8px; }
+        .area-item span { color: var(--white); font-family: 'Montserrat', sans-serif; font-weight: 600; font-size: 13px; display: block; }
+
+        .contact { background: var(--white); }
+        .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 50px; }
+        .contact-info h3 { font-size: 24px; font-weight: 800; color: var(--dark); text-transform: uppercase; margin-bottom: 12px; }
+        .contact-info > p { color: var(--gray); line-height: 1.7; margin-bottom: 30px; font-size: 14px; }
+        .contact-details { display: flex; flex-direction: column; gap: 22px; }
+        .contact-detail { display: flex; align-items: flex-start; gap: 14px; }
+        .contact-detail-icon { width: 46px; height: 46px; background: var(--primary); border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .contact-detail-icon svg { width: 20px; height: 20px; fill: var(--black); }
+        .contact-detail-text h4 { font-size: 13px; font-weight: 700; color: var(--dark); text-transform: uppercase; margin-bottom: 2px; }
+        .contact-detail-text p, .contact-detail-text a { color: var(--gray); font-size: 14px; text-decoration: none; line-height: 1.6; }
+        .contact-detail-text a:hover { color: var(--primary); }
+        .contact-social { display: flex; gap: 10px; margin-top: 30px; }
+        .social-link { width: 42px; height: 42px; background: var(--dark); border-radius: 10px; display: flex; align-items: center; justify-content: center; transition: all 0.3s; }
+        .social-link:hover { background: var(--primary); transform: translateY(-3px); }
+        .social-link svg { width: 18px; height: 18px; fill: var(--white); }
+        .social-link:hover svg { fill: var(--black); }
+
+        .contact-form { background: var(--dark); padding: 40px 30px; border-radius: 16px; box-shadow: 0 30px 60px rgba(0,0,0,0.15); }
+        .contact-form h3 { color: var(--white); font-size: 22px; font-weight: 800; text-transform: uppercase; margin-bottom: 6px; }
+        .contact-form > p { color: rgba(255,255,255,0.5); font-size: 13px; margin-bottom: 25px; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .form-group { margin-bottom: 16px; }
+        .form-group label { display: block; color: rgba(255,255,255,0.7); font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 12px 16px; background: var(--dark-gray); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: var(--white); font-family: 'Open Sans', sans-serif; font-size: 14px; transition: all 0.3s; outline: none; }
+        .form-group input::placeholder, .form-group textarea::placeholder { color: rgba(255,255,255,0.3); }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(212,160,23,0.15); }
+        .form-group select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='%23D4A017'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 15px center; cursor: pointer; }
+        .form-group select option { background: var(--dark-gray); color: var(--white); }
+        .form-group textarea { resize: vertical; min-height: 100px; }
+        .form-submit { width: 100%; padding: 16px; background: var(--primary); color: var(--black); font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 14px; text-transform: uppercase; letter-spacing: 2px; border: none; border-radius: 8px; cursor: pointer; transition: all 0.3s; }
+        .form-submit:hover { background: var(--primary-light); transform: translateY(-2px); box-shadow: 0 10px 30px rgba(212,160,23,0.3); }
+
+        .footer { background: var(--black); padding: 70px 0 0; }
+        .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1.5fr; gap: 40px; padding-bottom: 50px; border-bottom: 1px solid rgba(255,255,255,0.08); }
+        .footer-brand svg { height: 55px; width: auto; margin-bottom: 18px; }
+        .footer-brand p { color: rgba(255,255,255,0.5); font-size: 13px; line-height: 1.8; margin-bottom: 18px; }
+        .footer h4 { color: var(--white); font-size: 15px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 22px; position: relative; padding-bottom: 10px; }
+        .footer h4::after { content: ''; position: absolute; bottom: 0; left: 0; width: 35px; height: 3px; background: var(--primary); }
+        .footer-links { list-style: none; }
+        .footer-links li { margin-bottom: 10px; }
+        .footer-links a { color: rgba(255,255,255,0.5); text-decoration: none; font-size: 13px; transition: all 0.3s; display: flex; align-items: center; gap: 6px; }
+        .footer-links a:hover { color: var(--primary); transform: translateX(5px); }
+        .footer-contact-item { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 16px; }
+        .footer-contact-item svg { width: 16px; height: 16px; fill: var(--primary); flex-shrink: 0; margin-top: 3px; }
+        .footer-contact-item p, .footer-contact-item a { color: rgba(255,255,255,0.5); font-size: 13px; text-decoration: none; line-height: 1.6; }
+        .footer-contact-item a:hover { color: var(--primary); }
+        .footer-bottom { padding: 22px 0; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+        .footer-bottom p { color: rgba(255,255,255,0.35); font-size: 12px; }
+        .footer-bottom a { color: var(--primary); text-decoration: none; }
+
+        .back-to-top { position: fixed; bottom: 30px; right: 30px; width: 48px; height: 48px; background: var(--primary); color: var(--black); border: none; border-radius: 12px; display: flex; align-items: center; justify-content: center; cursor: pointer; opacity: 0; visibility: hidden; transition: all 0.3s; z-index: 999; box-shadow: 0 5px 20px rgba(212,160,23,0.3); }
+        .back-to-top.visible { opacity: 1; visibility: visible; }
+        .back-to-top:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(212,160,23,0.5); }
+        .back-to-top svg { width: 22px; height: 22px; fill: var(--black); }
+
+        .whatsapp-float { position: fixed; bottom: 30px; left: 30px; z-index: 999; }
+        .whatsapp-btn { display: flex; align-items: center; gap: 8px; background: #25D366; color: var(--white); padding: 12px 20px; border-radius: 50px; text-decoration: none; font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 13px; box-shadow: 0 5px 25px rgba(37,211,102,0.4); transition: all 0.3s; }
+        .whatsapp-btn:hover { transform: translateY(-3px) scale(1.05); box-shadow: 0 10px 35px rgba(37,211,102,0.5); }
+        .whatsapp-btn svg { width: 20px; height: 20px; fill: var(--white); }
+
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes bounce { 0%, 20%, 50%, 80%, 100% { transform: translateX(-50%) translateY(0); } 40% { transform: translateX(-50%) translateY(-15px); } 60% { transform: translateX(-50%) translateY(-7px); } }
+
+        .animate-on-scroll { opacity: 0; transform: translateY(40px); transition: all 0.7s ease; }
+        .animate-on-scroll.animated { opacity: 1; transform: translateY(0); }
+
+        .mobile-nav { display: none; position: fixed; inset: 0; background: rgba(10,10,10,0.98); z-index: 999; flex-direction: column; align-items: center; justify-content: center; gap: 25px; opacity: 0; visibility: hidden; transition: all 0.4s; }
+        .mobile-nav.active { opacity: 1; visibility: visible; }
+        .mobile-nav a { color: var(--white); text-decoration: none; font-family: 'Montserrat', sans-serif; font-size: 22px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; transition: color 0.3s; }
+        .mobile-nav a:hover { color: var(--primary); }
+
+        @media (max-width: 1024px) {
+            .services-grid { grid-template-columns: repeat(2, 1fr); }
+            .about-grid { grid-template-columns: 1fr; gap: 40px; }
+            .why-us-grid { grid-template-columns: repeat(2, 1fr); }
+            .process-steps { grid-template-columns: repeat(2, 1fr); }
+            .process-steps::before { display: none; }
+            .testimonials-grid { grid-template-columns: 1fr 1fr; }
+            .areas-grid { grid-template-columns: repeat(3, 1fr); }
+            .contact-grid { grid-template-columns: 1fr; }
+            .footer-grid { grid-template-columns: 1fr 1fr; }
+            .gallery-grid { grid-template-columns: repeat(2, 1fr); grid-template-rows: repeat(3, 250px); }
+            .gallery-item:nth-child(1) { grid-row: span 1; }
+            .team-grid { max-width: 100%; }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .hamburger { display: flex; }
+            .mobile-nav { display: flex; }
+            .hero-content { padding-top: 90px; }
+            .hero h1 { font-size: 32px; }
+            .hero-stats { gap: 25px; }
+            .hero-stat-number { font-size: 28px; }
+            .hero-buttons { flex-direction: column; }
+            .btn-primary, .btn-secondary { justify-content: center; width: 100%; padding: 14px 24px; font-size: 13px; }
+            .services-grid { grid-template-columns: 1fr; }
+            .why-us-grid { grid-template-columns: 1fr; }
+            .process-steps { grid-template-columns: 1fr; }
+            .testimonials-grid { grid-template-columns: 1fr; }
+            .areas-grid { grid-template-columns: repeat(2, 1fr); }
+            .form-row { grid-template-columns: 1fr; }
+            .contact-form { padding: 28px 18px; }
+            .footer-grid { grid-template-columns: 1fr; }
+            .cta-features { flex-direction: column; align-items: center; gap: 12px; }
+            .emergency-content { flex-direction: column; gap: 8px; }
+            .emergency-content span { font-size: 11px; }
+            .emergency-content a { font-size: 16px; }
+            .about-features { grid-template-columns: 1fr; }
+            .about-image-badge { right: 10px; bottom: -10px; }
+            .section { padding: 60px 0; }
+            .whatsapp-float { bottom: 20px; left: 20px; }
+            .whatsapp-btn { padding: 10px 16px; font-size: 12px; }
+            .back-to-top { bottom: 20px; right: 20px; width: 44px; height: 44px; }
+            .nav-logo svg { height: 42px; }
+            .team-grid { grid-template-columns: 1fr; max-width: 350px; }
+            .gallery-grid { grid-template-columns: 1fr; grid-template-rows: auto; }
+            .gallery-item { height: 250px; }
+        }
+
+        @media (max-width: 480px) {
+            .container { padding: 0 15px; }
+            .hero-content { padding: 80px 15px 40px; }
+            .hero h1 { font-size: 28px; }
+            .hero-subtitle { font-size: 15px; }
+            .hero-stats { flex-direction: column; gap: 15px; }
+            .hero-stat { display: flex; align-items: center; gap: 10px; }
+            .section-title { font-size: 24px; }
+            .areas-grid { grid-template-columns: 1fr 1fr; }
+            .footer-bottom { flex-direction: column; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="#" class="nav-logo">
+                <svg viewBox="0 0 320 70" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="silverGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#C8C8C8"/><stop offset="30%" style="stop-color:#A8A8A8"/><stop offset="70%" style="stop-color:#909090"/><stop offset="100%" style="stop-color:#707070"/>
+                        </linearGradient>
+                        <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#E8C84A"/><stop offset="30%" style="stop-color:#D4A017"/><stop offset="70%" style="stop-color:#C8960B"/><stop offset="100%" style="stop-color:#B08008"/>
+                        </linearGradient>
+                        <filter id="shadow1"><feDropShadow dx="1" dy="1" stdDeviation="1" flood-color="#000" flood-opacity="0.5"/></filter>
+                        <filter id="shadow2"><feDropShadow dx="1" dy="1" stdDeviation="0.5" flood-color="#000" flood-opacity="0.4"/></filter>
+                    </defs>
+                    <g transform="translate(2, 2)" filter="url(#shadow1)">
+                        <path d="M12 2 L20 46 L16 46 L14 34 L6 34 L4 46 L0 46 L8 2 Z" fill="url(#silverGrad)"/>
+                        <path d="M22 18 L36 6 L50 18 L46 18 L36 10 L26 18 Z" fill="url(#goldGrad)"/>
+                        <rect x="44" y="14" width="4" height="14" fill="url(#goldGrad)" transform="rotate(-20, 46, 21)"/>
+                        <path d="M42 10 L50 8 L50 14 L42 16 Z" fill="url(#goldGrad)" transform="rotate(-20, 46, 12)"/>
+                        <rect x="32" y="20" width="3" height="3" fill="url(#goldGrad)"/>
+                        <rect x="37" y="20" width="3" height="3" fill="url(#goldGrad)"/>
+                        <rect x="32" y="25" width="3" height="3" fill="url(#goldGrad)"/>
+                        <rect x="37" y="25" width="3" height="3" fill="url(#goldGrad)"/>
+                    </g>
+                    <text x="56" y="32" font-family="Montserrat, sans-serif" font-weight="900" font-size="20" fill="url(#silverGrad)" filter="url(#shadow2)" letter-spacing="1.5">APEXFIX</text>
+                    <text x="56" y="50" font-family="Montserrat, sans-serif" font-weight="700" font-size="10" fill="url(#goldGrad)" letter-spacing="4">SOLUTIONS</text>
+                    <text x="56" y="62" font-family="Montserrat, sans-serif" font-weight="600" font-size="7" fill="#888" letter-spacing="2">BUILT STRONG. FIXED RIGHT.</text>
+                    <polygon points="180,54 182,57 185,57 183,59 184,62 181,60 179,62 180,59 178,57 181,57" fill="url(#goldGrad)" filter="url(#shadow2)"/>
+                </svg>
+            </a>
+            <ul class="nav-links">
+                <li><a href="#services">Services</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#gallery">Gallery</a></li>
+                <li><a href="#testimonials">Reviews</a></li>
+                <li><a href="#contact">Contact</a></li>
+                <li><a href="tel:+15122935308" class="nav-phone"><svg viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>(512) 293-5308</a></li>
+                <li><a href="#contact" class="nav-cta">Free Estimate</a></li>
+            </ul>
+            <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
+        </div>
+    </nav>
+
+    <div class="mobile-nav" id="mobileNav">
+        <a href="#hero" onclick="closeMobileNav()">Home</a>
+        <a href="#services" onclick="closeMobileNav()">Services</a>
+        <a href="#about" onclick="closeMobileNav()">About Us</a>
+        <a href="#gallery" onclick="closeMobileNav()">Gallery</a>
+        <a href="#testimonials" onclick="closeMobileNav()">Reviews</a>
+        <a href="#contact" onclick="closeMobileNav()">Contact</a>
+        <a href="tel:+15122935308" style="color: #D4A017; font-size: 18px;"> (512) 293-5308</a>
+    </div>
+
+    <section class="hero" id="hero">
+        <div class="hero-bg"><img src="https://raw.githubusercontent.com/luisaceron4013/Images-company-ApexFix/main/Principal%20photo%20in%20About%20Us.jpeg" alt="Professional construction worker"></div>
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <div class="hero-badge"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>Trusted Home Services in Texas</div>
+            <h1>We Build.<br>We Fix.<br><span>We Improve.</span></h1>
+            <p class="hero-subtitle">Quality work. Lasting results. Your trusted partner for all home improvement needs across Texas.</p>
+            <p class="hero-tagline">Built Strong. Fixed Right.</p>
+            <div class="hero-buttons">
+                <a href="#contact" class="btn-primary"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zm0-12H5V6h14v2z"/></svg>Schedule Free Evaluation</a>
+                <a href="tel:+15122935308" class="btn-secondary"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>Call Now</a>
+            </div>
+            <div class="hero-stats">
+                <div class="hero-stat"><div class="hero-stat-number">8+</div><div class="hero-stat-label">Services Offered</div></div>
+                <div class="hero-stat"><div class="hero-stat-number">24/7</div><div class="hero-stat-label">Emergency Service</div></div>
+                <div class="hero-stat"><div class="hero-stat-number">100%</div><div class="hero-stat-label">Satisfaction Goal</div></div>
+            </div>
+        </div>
+        <div class="hero-scroll"><svg viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg></div>
+    </section>
+
+    <div class="emergency-banner">
+        <div class="emergency-content">
+            <span> Emergency? We're here 24/7!</span>
+            <a href="tel:+15122935308">+1 (512) 293-5308</a>
+            <span>One Call. We Handle It All.</span>
+        </div>
+    </div>
+
+    <section class="section services" id="services">
+        <div class="container">
+            <div class="section-header animate-on-scroll">
+                <div class="section-label">What We Do</div>
+                <h2 class="section-title">Our Specialized <span>Services</span></h2>
+                <p class="section-subtitle">From routine maintenance to emergency repairs, we deliver quality craftsmanship that protects and enhances your most valuable investment.</p>
+            </div>
+            <div class="services-grid">
+                <div class="service-card animate-on-scroll"><div class="service-icon"><svg viewBox="0 0 24 24"><path d="M16.56 8.94L7.62 0 6.21 1.41l2.38 2.38-5.15 5.15c-.59.59-.59 1.54 0 2.12l5.5 5.5c.29.29.68.44 1.06.44s.77-.15 1.06-.44l5.5-5.5c.59-.58.59-1.53 0-2.12zM5.21 10L10 5.21 14.79 10H5.21zM19 11.5s-2 2.17-2 3.5c0 1.1.9 2 2 2s2-.9 2-2c0-1.33-2-3.5-2-3.5z"/></svg></div><h3>Interior & Exterior Painting</h3><p>Transform your home with professional paint services that deliver flawless finishes and lasting protection.</p></div>
+                <div class="service-card animate-on-scroll"><div class="service-icon"><svg viewBox="0 0 24 24"><path d="M12 3L2 12h3v8h6v-6h2v6h6v-8h3L12 3zm0 12.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg></div><h3>Deck Construction & Restoration</h3><p>Build your dream outdoor space or restore your existing deck to its former glory with our expert craftsmanship.</p></div>
+                <div class="service-card animate-on-scroll"><div class="service-icon"><svg viewBox="0 0 24 24"><path d="M20 4H4v16h16V4zm-2 14H6V6h12v12zM8 8h8v2H8zm0 4h5v2H8z"/></svg></div><h3>Fence Installation & Maintenance</h3><p>Secure your property and enhance curb appeal with professionally installed and maintained fencing solutions.</p></div>
+                <div class="service-card animate-on-scroll"><div class="service-icon"><svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14zm-7-2h2v-4h4v-2h-4V7h-2v4H8v2h4z"/></svg></div><h3>Drywall & Garage Repair</h3><p>Expert drywall installation, repair, and garage door services to keep your home in perfect condition.</p></div>
+                <div class="service-card animate-on-scroll"><div class="service-icon"><svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg></div><h3>Roof Repair</h3><p>Protect your home from the Texas elements with reliable roof repair and maintenance services.</p></div>
+                <div class="service-card animate-on-scroll"><div class="service-icon"><svg viewBox="0 0 24 24"><path d="M12 7V3H2v18h20V7H12zM6 19H4v-2h2v2zm0-4H4v-2h2v2zm0-4H4V9h2v2zm0-4H4V5h2v2zm4 12H8v-2h2v2zm0-4H8v-2h2v2zm0-4H8V9h2v2zm0-4H8V5h2v2zm10 12h-8v-2h2v-2h-2v-2h2v-2h-2V9h8v10zm-2-8h-2v2h2v-2zm0 4h-2v2h2v-2z"/></svg></div><h3>General Construction & Restoration</h3><p>Complete construction and restoration services for any project, big or small, with attention to every detail.</p></div>
+                <div class="service-card animate-on-scroll"><div class="service-icon"><svg viewBox="0 0 24 24"><path d="M22.7 19l-9.1-9.1c.9-2.3.4-5-1.5-6.9-2-2-5-2.4-7.4-1.3L9 6 6 9 1.6 4.7C.4 7.1.9 10.1 2.9 12.1c1.9 1.9 4.6 2.4 6.9 1.5l9.1 9.1c.4.4 1 .4 1.4 0l2.3-2.3c.5-.4.5-1.1.1-1.4z"/></svg></div><h3>Handyman Services</h3><p>From minor repairs to major improvements, our skilled handymen tackle any job around your home.</p></div>
+                <div class="service-card animate-on-scroll"><div class="service-icon"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg></div><h3>24/7 Emergency Services</h3><p>When disaster strikes, we're just one call away. Round-the-clock emergency response for urgent situations.</p></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section about" id="about">
+        <div class="container">
+            <div class="about-grid">
+                <div class="about-image animate-on-scroll">
+                    <img src="https://raw.githubusercontent.com/luisaceron4013/Images-company-ApexFix/main/Principal%20photo%20in%20About%20Us.jpeg" alt="ApexFix team working on roof repair">
+                    <div class="about-image-badge"><div class="badge-number">TX</div><div class="badge-text">Proudly Serving<br>Texas</div></div>
+                </div>
+                <div class="about-content animate-on-scroll">
+                    <div class="section-label">About Us</div>
+                    <h2 class="section-title">Your Trusted Partner for <span>Home Excellence</span></h2>
+                    <p class="about-text">At ApexFix Solutions, we believe that every home deserves the best care possible. Founded by Giovanni Ceron, our mission is to provide Texas homeowners with reliable, high-quality home improvement services that protect their investment and enhance their quality of life.</p>
+                    <p class="about-text">We understand that maintaining a property requires time, resources, and planning. That's why we offer complimentary preventive evaluations to help you identify potential issues before they become costly repairs. Our team works Thursday through Sunday, adapting to your schedule to make home maintenance as easy as possible.</p>
+                    <div class="about-features">
+                        <div class="about-feature"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg><span>Free Technical Evaluations</span></div>
+                        <div class="about-feature"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg><span>No Obligation Estimates</span></div>
+                        <div class="about-feature"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg><span>Fully Insured & Bonded</span></div>
+                        <div class="about-feature"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg><span>Flexible Scheduling</span></div>
+                        <div class="about-feature"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg><span>Detailed Technical Reports</span></div>
+                        <div class="about-feature"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg><span>Financing Options Available</span></div>
+                    </div>
+                    <a href="#contact" class="btn-primary">Get Your Free Evaluation<svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg></a>
+                </div>
+            </div>
+            <div class="team-section">
+                <div class="team-header animate-on-scroll"><h3>Meet Our <span>Team</span></h3></div>
+                <div class="team-grid">
+                    <div class="team-card animate-on-scroll">
+                        <div class="team-card-img"><img src="https://raw.githubusercontent.com/luisaceron4013/Images-company-ApexFix/main/Giovanni%20Ceron%20Founder%20(Image%201).jpeg" alt="Giovanni Ceron - Founder & Project Manager"></div>
+                        <div class="team-card-info"><h4>Giovanni Ceron</h4><div class="team-role">Founder & Project Manager</div><p>With a passion for quality craftsmanship and client satisfaction, Giovanni leads every project with dedication and expertise.</p></div>
+                    </div>
+                    <div class="team-card animate-on-scroll">
+                        <div class="team-card-img"><img src="https://raw.githubusercontent.com/luisaceron4013/Images-company-ApexFix/main/Luisa%20Fernanda%20Commercial%20and%20Administrative%20Analyst.jpeg" alt="Luisa Fernanda - Business & Administrative Analyst"></div>
+                        <div class="team-card-info"><h4>Luisa Fernanda</h4><div class="team-role">Business & Administrative Analyst</div><p>Managing operations with precision and ensuring every client receives the best experience from start to finish.</p></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section why-us">
+        <div class="container">
+            <div class="section-header animate-on-scroll">
+                <div class="section-label">Why Choose Us</div>
+                <h2 class="section-title">The ApexFix <span>Difference</span></h2>
+                <p class="section-subtitle">We combine professional expertise with genuine care for your home, delivering results that exceed expectations every time.</p>
+            </div>
+            <div class="why-us-grid">
+                <div class="why-card animate-on-scroll"><div class="why-card-icon"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg></div><h3>Quality Work You Can Trust</h3><p>Every project is completed with the highest standards of craftsmanship. We take pride in delivering work that stands the test of time.</p></div>
+                <div class="why-card animate-on-scroll"><div class="why-card-icon"><svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></div><h3>Satisfaction Guaranteed</h3><p>Your satisfaction is our top priority. We work closely with you throughout every project to ensure the results meet your expectations.</p></div>
+                <div class="why-card animate-on-scroll"><div class="why-card-icon"><svg viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg></div><h3>Fully Insured & Protected</h3><p>Rest easy knowing your home and our workers are fully covered. We carry comprehensive insurance for your peace of mind.</p></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section process">
+        <div class="container">
+            <div class="section-header animate-on-scroll">
+                <div class="section-label">How It Works</div>
+                <h2 class="section-title">Our Simple <span>Process</span></h2>
+                <p class="section-subtitle">Getting started with ApexFix Solutions is easy. Follow these simple steps to transform your home.</p>
+            </div>
+            <div class="process-steps">
+                <div class="process-step animate-on-scroll"><div class="step-number">1</div><h3>Contact Us</h3><p>Reach out by phone, email, or through our contact form. Tell us about your project or request a free evaluation.</p></div>
+                <div class="process-step animate-on-scroll"><div class="step-number">2</div><h3>Free Evaluation</h3><p>We schedule a complimentary technical visit to assess your property and identify improvement opportunities.</p></div>
+                <div class="process-step animate-on-scroll"><div class="step-number">3</div><h3>Custom Plan</h3><p>Receive a detailed, transparent estimate with a prioritized work plan tailored to your needs and budget.</p></div>
+                <div class="process-step animate-on-scroll"><div class="step-number">4</div><h3>Expert Execution</h3><p>Our skilled team completes the work with precision and care, keeping you informed every step of the way.</p></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="gallery" id="gallery">
+        <div class="container">
+            <div class="section-header animate-on-scroll">
+                <div class="section-label">Our Work</div>
+                <h2 class="section-title" style="color: #fff;">Project <span>Gallery</span></h2>
+                <p class="section-subtitle" style="color: rgba(255,255,255,0.6);">Take a look at some of our recent projects across Texas.</p>
+            </div>
+            <div class="gallery-grid">
+                <div class="gallery-item animate-on-scroll"><img src="https://raw.githubusercontent.com/luisaceron4013/Images-company-ApexFix/main/Wooden%20floor%20installation%20image.jpeg" alt="Wooden Deck Construction"><div class="gallery-item-overlay"><span>Deck Construction</span></div></div>
+                <div class="gallery-item animate-on-scroll"><img src="https://raw.githubusercontent.com/luisaceron4013/Images-company-ApexFix/main/Image%20of%20repair%20and%20installation%20of%20wooden%20fence.jpeg" alt="Wooden Fence Installation"><div class="gallery-item-overlay"><span>Fence Installation</span></div></div>
+                <div class="gallery-item animate-on-scroll"><img src="https://raw.githubusercontent.com/luisaceron4013/Images-company-ApexFix/main/Image%20of%20kitchen%20refurbishment%20and%20coating.jpeg" alt="Kitchen Renovation"><div class="gallery-item-overlay"><span>Kitchen Renovation</span></div></div>
+                <div class="gallery-item animate-on-scroll"><img src="https://raw.githubusercontent.com/luisaceron4013/Images-company-ApexFix/main/Image%20of%20garage%20refurbishment%20and%20coating%201.jpeg" alt="Garage Floor Coating"><div class="gallery-item-overlay"><span>Garage Floor Coating</span></div></div>
+                <div class="gallery-item animate-on-scroll"><img src="https://raw.githubusercontent.com/luisaceron4013/Images-company-ApexFix/main/Image%20of%20installation%20and%20repair%20of%20gutters%201.jpeg" alt="Gutter Installation"><div class="gallery-item-overlay"><span>Gutter Installation</span></div></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section testimonials" id="testimonials">
+        <div class="container">
+            <div class="section-header animate-on-scroll">
+                <div class="section-label">Testimonials</div>
+                <h2 class="section-title">What Our <span>Clients Say</span></h2>
+                <p class="section-subtitle">Don't just take our word for it. Here's what Texas homeowners are saying about ApexFix Solutions.</p>
+            </div>
+            <div class="testimonials-grid">
+                <div class="testimonial-card animate-on-scroll"><div class="testimonial-quote">"</div><p class="testimonial-text">Giovanni and his team did an outstanding job on our deck restoration. The attention to detail was incredible, and the final result exceeded our expectations. Highly recommend!</p><div class="testimonial-author"><div class="testimonial-avatar">MR</div><div><div class="testimonial-name">Michael R.</div><div class="testimonial-location">San Antonio, TX</div><div class="testimonial-stars"><svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg><svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg><svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg><svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg><svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></div></div></div></div>
+                <div class="testimonial-card animate-on-scroll"><div class="testimonial-quote">"</div><p class="testimonial-text">We needed emergency roof repair after a storm, and ApexFix responded within hours. They were professional, fast, and the price was very fair. True professionals!</p><div class="testimonial-author"><div class="testimonial-avatar">SL</div><div><div class="testimonial-name">Sarah L.</div><div class="testimonial-location">Austin, TX</div><div class="testimonial-stars"><svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg><svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg><svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg><svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg><svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></div></div></div></div>
+                <div class="testimonial-card animate-on-scroll"><div class="testimonial-quote">"</div><p class="testimonial-text">The free evaluation was so helpful! Giovanni identified issues we didn't even notice and gave us a clear plan to tackle them. No pressure at all — just honest, professional advice.</p><div class="testimonial-author"><div class="testimonial-avatar">JT</div><div><div class="testimonial-name">James T.</div><div class="testimonial-location">Kerrville, TX</div><div class="testimonial-stars"><svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg><svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg><svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg><svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg><svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></div></div></div></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section service-areas">
+        <div class="container">
+            <div class="section-header animate-on-scroll">
+                <div class="section-label">Coverage</div>
+                <h2 class="section-title" style="color: #fff;">Service <span>Areas</span></h2>
+                <p class="section-subtitle" style="color: rgba(255,255,255,0.6);">Proudly serving communities across the Texas Hill Country and surrounding areas.</p>
+            </div>
+            <div class="areas-grid">
+                <div class="area-item animate-on-scroll"><svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg><span>San Antonio</span></div>
+                <div class="area-item animate-on-scroll"><svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg><span>Austin</span></div>
+                <div class="area-item animate-on-scroll"><svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg><span>Kerrville</span></div>
+                <div class="area-item animate-on-scroll"><svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg><span>Fredericksburg</span></div>
+                <div class="area-item animate-on-scroll"><svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg><span>Boerne</span></div>
+                <div class="area-item animate-on-scroll"><svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg><span>New Braunfels</span></div>
+                <div class="area-item animate-on-scroll"><svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg><span>Hill Country</span></div>
+                <div class="area-item animate-on-scroll"><svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg><span>Surrounding Areas</span></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section contact" id="contact">
+        <div class="container">
+            <div class="section-header animate-on-scroll">
+                <div class="section-label">Get In Touch</div>
+                <h2 class="section-title">Contact <span>Us Today</span></h2>
+                <p class="section-subtitle">Ready to get started? Reach out for a free evaluation or any questions about our services.</p>
+            </div>
+            <div class="contact-grid">
+                <div class="contact-info animate-on-scroll">
+                    <h3>Let's Talk About Your Project</h3>
+                    <p>Whether you need a quick repair or a major renovation, we're here to help. Contact us today for a free, no-obligation evaluation of your property.</p>
+                    <div class="contact-details">
+                        <div class="contact-detail"><div class="contact-detail-icon"><svg viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg></div><div class="contact-detail-text"><h4>Phone / WhatsApp</h4><a href="tel:+15122935308">+1 (512) 293-5308</a><br><a href="tel:+18303471444">+1 (830) 347-1444</a></div></div>
+                        <div class="contact-detail"><div class="contact-detail-icon"><svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg></div><div class="contact-detail-text"><h4>Email</h4><a href="mailto:Services@apexfix-solutions.com">Services@apexfix-solutions.com</a></div></div>
+                        <div class="contact-detail"><div class="contact-detail-icon"><svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg></div><div class="contact-detail-text"><h4>Service Area</h4><p>Texas Hill Country & Surrounding Areas</p></div></div>
+                        <div class="contact-detail"><div class="contact-detail-icon"><svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg></div><div class="contact-detail-text"><h4>Working Hours</h4><p>Thursday — Sunday: 7:00 AM — 7:00 PM<br>24/7 Emergency Services Available</p></div></div>
+                    </div>
+                    <div class="contact-social">
+                        <a href="https://www.instagram.com/apexfix-solutions" target="_blank" class="social-link" aria-label="Instagram"><svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg></a>
+                        <a href="https://wa.me/15122935308" target="_blank" class="social-link" aria-label="WhatsApp"><svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg></a>
+                        <a href="mailto:Services@apexfix-solutions.com" class="social-link" aria-label="Email"><svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg></a>
+                    </div>
+                </div>
+                <div class="contact-form animate-on-scroll">
+                    <h3>Request a Free Estimate</h3>
+                    <p>Fill out the form below and we'll get back to you within 24 hours.</p>
+                    <form id="contactForm" onsubmit="handleSubmit(event)">
+                        <div class="form-row">
+                            <div class="form-group"><label for="firstName">First Name *</label><input type="text" id="firstName" name="firstName" placeholder="John" required></div>
+                            <div class="form-group"><label for="lastName">Last Name *</label><input type="text" id="lastName" name="lastName" placeholder="Doe" required></div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group"><label for="email">Email *</label><input type="email" id="email" name="email" placeholder="john@example.com" required></div>
+                            <div class="form-group"><label for="phone">Phone *</label><input type="tel" id="phone" name="phone" placeholder="(555) 123-4567" required></div>
+                        </div>
+                        <div class="form-group"><label for="address">Property Address</label><input type="text" id="address" name="address" placeholder="123 Main St, City, TX"></div>
+                        <div class="form-group"><label for="service">Service Needed</label><select id="service" name="service"><option value="">Select a service...</option><option value="painting">Interior & Exterior Painting</option><option value="deck">Deck Construction & Restoration</option><option value="fence">Fence Installation & Maintenance</option><option value="drywall">Drywall & Garage Repair</option><option value="roof">Roof Repair</option><option value="construction">General Construction & Restoration</option><option value="handyman">Handyman Services</option><option value="emergency">24/7 Emergency Services</option><option value="evaluation">Free Property Evaluation</option></select></div>
+                        <div class="form-group"><label for="message">Message</label><textarea id="message" name="message" placeholder="Tell us about your project or any questions you have..."></textarea></div>
+                        <button type="submit" class="form-submit">Send Request →</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <svg viewBox="0 0 320 70" xmlns="http://www.w3.org/2000/svg" height="55">
+                        <defs>
+                            <linearGradient id="silverGrad2" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#C8C8C8"/><stop offset="30%" style="stop-color:#A8A8A8"/><stop offset="70%" style="stop-color:#909090"/><stop offset="100%" style="stop-color:#707070"/></linearGradient>
+                            <linearGradient id="goldGrad2" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#E8C84A"/><stop offset="30%" style="stop-color:#D4A017"/><stop offset="70%" style="stop-color:#C8960B"/><stop offset="100%" style="stop-color:#B08008"/></linearGradient>
+                            <filter id="shadow3"><feDropShadow dx="1" dy="1" stdDeviation="1" flood-color="#000" flood-opacity="0.5"/></filter>
+                            <filter id="shadow4"><feDropShadow dx="1" dy="1" stdDeviation="0.5" flood-color="#000" flood-opacity="0.4"/></filter>
+                        </defs>
+                        <g transform="translate(2, 2)" filter="url(#shadow3)">
+                            <path d="M12 2 L20 46 L16 46 L14 34 L6 34 L4 46 L0 46 L8 2 Z" fill="url(#silverGrad2)"/>
+                            <path d="M22 18 L36 6 L50 18 L46 18 L36 10 L26 18 Z" fill="url(#goldGrad2)"/>
+                            <rect x="44" y="14" width="4" height="14" fill="url(#goldGrad2)" transform="rotate(-20, 46, 21)"/>
+                            <path d="M42 10 L50 8 L50 14 L42 16 Z" fill="url(#goldGrad2)" transform="rotate(-20, 46, 12)"/>
+                            <rect x="32" y="20" width="3" height="3" fill="url(#goldGrad2)"/>
+                            <rect x="37" y="20" width="3" height="3" fill="url(#goldGrad2)"/>
+                            <rect x="32" y="25" width="3" height="3" fill="url(#goldGrad2)"/>
+                            <rect x="37" y="25" width="3" height="3" fill="url(#goldGrad2)"/>
+                        </g>
+                        <text x="56" y="32" font-family="Montserrat, sans-serif" font-weight="900" font-size="20" fill="url(#silverGrad2)" filter="url(#shadow4)" letter-spacing="1.5">APEXFIX</text>
+                        <text x="56" y="50" font-family="Montserrat, sans-serif" font-weight="700" font-size="10" fill="url(#goldGrad2)" letter-spacing="4">SOLUTIONS</text>
+                        <text x="56" y="62" font-family="Montserrat, sans-serif" font-weight="600" font-size="7" fill="#888" letter-spacing="2">BUILT STRONG. FIXED RIGHT.</text>
+                        <polygon points="180,54 182,57 185,57 183,59 184,62 181,60 179,62 180,59 178,57 181,57" fill="url(#goldGrad2)" filter="url(#shadow4)"/>
+                    </svg>
+                    <p>Your trusted partner for all home improvement needs in Texas. Quality work, lasting results. Built Strong. Fixed Right.</p>
+                    <div class="contact-social" style="margin-top: 15px;">
+                        <a href="https://www.instagram.com/apexfix-solutions" target="_blank" class="social-link" aria-label="Instagram"><svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg></a>
+                        <a href="https://wa.me/15122935308" target="_blank" class="social-link" aria-label="WhatsApp"><svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg></a>
+                    </div>
+                </div>
+                <div><h4>Services</h4><ul class="footer-links"><li><a href="#services">Interior & Exterior Painting</a></li><li><a href="#services">Deck Construction & Restoration</a></li><li><a href="#services">Fence Installation & Maintenance</a></li><li><a href="#services">Drywall & Garage Repair</a></li><li><a href="#services">Roof Repair</a></li><li><a href="#services">General Construction</a></li><li><a href="#services">Handyman Services</a></li><li><a href="#services">24/7 Emergency Services</a></li></ul></div>
+                <div><h4>Quick Links</h4><ul class="footer-links"><li><a href="#hero">Home</a></li><li><a href="#about">About Us</a></li><li><a href="#services">Our Services</a></li><li><a href="#gallery">Gallery</a></li><li><a href="#testimonials">Testimonials</a></li><li><a href="#contact">Contact Us</a></li><li><a href="#contact">Free Evaluation</a></li></ul></div>
+                <div><h4>Contact Info</h4><div class="footer-contact-item"><svg viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg><div><a href="tel:+15122935308">+1 (512) 293-5308</a><br><a href="tel:+18303471444">+1 (830) 347-1444</a></div></div><div class="footer-contact-item"><svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg><a href="mailto:Services@apexfix-solutions.com">Services@apexfix-solutions.com</a></div><div class="footer-contact-item"><svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg><p>Thu — Sun: 7AM — 7PM<br>24/7 Emergency Available</p></div><div class="footer-contact-item"><svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg><p>Texas Hill Country &<br>Surrounding Areas</p></div></div>
+            </div>
+            <div class="footer-bottom"><p>&copy; 2025 <a href="#">ApexFix Solutions</a>. All Rights Reserved.</p><p>Founded by <a href="#about">Giovanni Ceron</a> — Built Strong. Fixed Right.</p></div>
+        </div>
+    </footer>
+
+    <div class="whatsapp-float"><a href="https://wa.me/15122935308?text=Hi%20ApexFix%20Solutions!%20I'm%20interested%20in%20your%20services." target="_blank" class="whatsapp-btn"><svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>Chat on WhatsApp</a></div>
+
+    <button class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0, behavior:'smooth'})"><svg viewBox="0 0 24 24"><path d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"/></svg></button>
+
+    <script>
+        const navbar = document.getElementById('navbar');
+        const backToTop = document.getElementById('backToTop');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 80) { navbar.classList.add('scrolled'); } else { navbar.classList.remove('scrolled'); }
+            if (window.scrollY > 500) { backToTop.classList.add('visible'); } else { backToTop.classList.remove('visible'); }
+        });
+        const hamburger = document.getElementById('hamburger');
+        const mobileNav = document.getElementById('mobileNav');
+        hamburger.addEventListener('click', () => {
+            hamburger.classList.toggle('active');
+            mobileNav.classList.toggle('active');
+            document.body.style.overflow = mobileNav.classList.contains('active') ? 'hidden' : '';
+        });
+        function closeMobileNav() {
+            hamburger.classList.remove('active');
+            mobileNav.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+        const animateElements = document.querySelectorAll('.animate-on-scroll');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry, index) => {
+                if (entry.isIntersecting) {
+                    setTimeout(() => { entry.target.classList.add('animated'); }, index * 80);
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+        animateElements.forEach(el => observer.observe(el));
+        function handleSubmit(e) {
+            e.preventDefault();
+            const form = e.target;
+            const submitBtn = form.querySelector('.form-submit');
+            const originalText = submitBtn.textContent;
+            submitBtn.textContent = 'Sending...';
+            submitBtn.disabled = true;
+            setTimeout(() => {
+                submitBtn.textContent = '✓ Message Sent!';
+                submitBtn.style.background = '#25D366';
+                submitBtn.style.color = '#fff';
+                setTimeout(() => {
+                    form.reset();
+                    submitBtn.textContent = originalText;
+                    submitBtn.style.background = '';
+                    submitBtn.style.color = '';
+                    submitBtn.disabled = false;
+                }, 3000);
+            }, 1500);
+        }
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    e.preventDefault();
+                    const offset = 80;
+                    const top = target.getBoundingClientRect().top + window.pageYOffset - offset;
+                    window.scrollTo({ top, behavior: 'smooth' });
+                }
+            });
+        });
+        function animateCounters() {
+            const counters = document.querySelectorAll('.hero-stat-number');
+            counters.forEach(counter => {
+                const text = counter.textContent;
+                if (text.includes('+')) {
+                    const num = parseInt(text);
+                    let current = 0;
+                    const increment = num / 30;
+                    const timer = setInterval(() => {
+                        current += increment;
+                        if (current >= num) { counter.textContent = num + '+'; clearInterval(timer); }
+                        else { counter.textContent = Math.floor(current) + '+'; }
+                    }, 50);
+                }
+            });
+        }
+        const heroObserver = new IntersectionObserver((entries) => {
+            if (entries[0].isIntersecting) { animateCounters(); heroObserver.disconnect(); }
+        });
+        heroObserver.observe(document.querySelector('.hero'));
+    </script>
+</body>
+</html>

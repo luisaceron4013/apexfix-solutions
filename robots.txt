@@ -1,3 +1,7 @@
 User-agent: *
 Allow: /
-Sitemap: https://www.apexfix-solutions.com/sitemap.xml
+Sitemap: https://apexfix-solutions.com/sitemap.xml
+
+# Block admin/private paths (if you add any later)
+Disallow: /private/
+Disallow: /admin/
